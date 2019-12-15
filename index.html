@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css.css">
+    <script src="./js/animate.js"></script>
+</head>
+<body>
+    <div id="head">
+        <img src="images/a15.png">
+        <div><p id="hdz">[温馨提示]最近有不少不法分子在网上骗人，请大家注意！！！</p></div>
+    </div>
+    <div class="box" id="box">
+        <div class="slider" id="slider">
+            <div class="slide"><img src="images/b5.png" alt=""></div>
+            <div class="slide"><img src="images/b1.png" alt=""></div>
+            <div class="slide"><img src="images/b2.png" alt=""></div>
+            <div class="slide"><img src="images/b3.png" alt=""></div>
+            <div class="slide"><img src="images/b4.png" alt=""></div>
+            <div class="slide"><img src="images/b5.png" alt=""></div>
+            <div class="slide"><img src="images/b1.png" alt=""></div>
+        </div>
+
+        <span id="left"><</span>
+        <span id="right">></span>
+
+        <ul class="nav" id="nav">
+            <li class="active" id="active">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+        </ul>
+    </div>
+</body>
+<script>
+    //轮播字
+    var hdz = document.getElementById("hdz");
+    var timer = setInterval(function(){
+        var now = parseInt(getStyle(hdz,"left"));
+        if(now == -400){
+            hdz.style.left = 1000 + "px";
+        }
+        else{
+            hdz.style.left = now - 2 + "px";
+        }
+    },30)
+
+    var box = document.getElementById("box");
+    var List = document.getElementById("nav").children;
+    var slider = document.getElementById("slider");
+    var left = document.getElementById("left");
+    var right = document.getElementById("right");
+    var index = 1;
+    var isMoving = false;
+
+    //下一张
+    function next(){
+        if(!isMoving){
+            isMoving = true;
+            index++;
+            dian();
+            animate(slider,{left:-1200*index},function(){
+                if(index == 6){
+                    slider.style.left = "-1200px";
+                    index = 1;
+                }
+                isMoving = false;
+            });
+        }
+    }
+
+    //上一张
+    function back(){
+        if(isMoving){
+            return;
+        }
+        isMoving = true;
+        index--;
+        dian();
+        animate(slider,{left:-1200*index},function(){
+            if(index == 0){
+                slider.style.left = "-6000px";
+                index = 5;
+            }
+            isMoving = false;
+        })
+    }
+
+    var time = setInterval(next,3000);//自动轮播图片
+    //划出鼠标结束定时器
+    box.onmouseover = function(){
+        animate(left,{opacity:50});
+        animate(right,{opacity:50});
+        clearInterval(time);
+    }
+    //划出鼠标设定定时器
+    box.onmouseout = function(){
+        animate(left,{opacity:0});
+        animate(right,{opacity:0});
+        time = setInterval(next,3000);
+    }
+    //左右切换
+    right.onclick = next;
+    left.onclick = back;
+
+    //下方圆点点击切换
+    for(var i = 0; i < List.length; ++i){
+        List[i].num = i;
+        List[i].onclick = function(){
+            index = this.num + 1;
+            dian();
+            animate(slider,{left:-1200*index});
+        }
+    }
+
+    //下方圆点的样式变换
+    function dian(){
+        for(var i = 0; i < List.length; ++i){
+            List[i].className = " ";
+        }
+        if(index == 6){
+            List[0].className = "active";
+        }
+        else if(index == 0){
+            List[4].className = "active";
+        }
+        else{
+            List[index-1].className = "active";
+        }
+
+    }
+
+</script>
+</html>
